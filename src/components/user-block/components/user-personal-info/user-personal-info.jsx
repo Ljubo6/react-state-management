@@ -1,9 +1,20 @@
 import { store } from '../../../../store.jsx';
+import { useEffect, useState } from 'react';
 
 export const UserPersonalInfo = () => {
-	const { name, age } = store.getState();
+	const [state, setState] = useState(store.getState());
+	useEffect(() => {
+		const unsubscribe = store.subscribe(() => {
+			setState(store.getState());
+			return () => {
+				unsubscribe();
+			};
+		});
+	}, []);
+
+	const { name, age } = state;
 	const onUserUpdate = () => {
-		const { name, email, phone } = store.getState();
+		const { name, email, phone } = state;
 		const newUserData = { name, age: 30, email, phone };
 		store.dispatch({ type: 'SET_USER_DATA', payload: newUserData });
 	};

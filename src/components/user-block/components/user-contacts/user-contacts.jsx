@@ -1,7 +1,16 @@
 import { store } from '../../../../store.jsx';
+import { useEffect, useState } from 'react';
 
 export const UserContacts = () => {
-	const { email, phone } = store.getState();
+	const [state, setState] = useState(store.getState());
+
+	useEffect(() => {
+		const unsubscribe = store.subscribe(() => {
+			setState(store.getState());
+		});
+		return () => unsubscribe();
+	}, []);
+	const { email, phone } = state;
 	return (
 		<div>
 			<h3>Contacts:</h3>
